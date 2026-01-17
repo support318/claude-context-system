@@ -561,11 +561,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       ],
     };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return {
       content: [
         {
           type: 'text',
-          text: `Error executing ${name}: ${error.message}`,
+          text: `Error executing ${name}: ${errorMessage}`,
         },
       ],
       isError: true,
@@ -587,8 +588,9 @@ async function main() {
     await client.query('SELECT 1');
     await client.end();
     console.error('✓ Connected to claude_context database');
-  } catch (error) {
-    console.error('✗ Database connection failed:', error.message);
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    console.error('✗ Database connection failed:', errorMessage);
     process.exit(1);
   }
 
